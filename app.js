@@ -5,7 +5,7 @@ const router = require("./lib/router");
 const http = require("http");
 const gitWrapper = require("./lib/githubAPI_wrapper.js");
 const fs = require("fs");
-const commitFeed = require("./data/commits.json");
+let commitFeed = require("./data/commits.json");
 const querystring = require("querystring");
 const url = require("url");
 
@@ -21,12 +21,35 @@ app.get("/", (req, res) => {
   });
   fs.readFile("./views/index.html", "utf8", (err, data) => {
     if (err) throw err;
+    let params = querystring.parse(req.url);
+    console.log(' ---------- params length ------------');
+    console.log(params);
+    if (Object.keys(params).length > 1) {
+      gitWrapper.getCommits(params['/?username'], params['repo'])
+        .then((resolved) => {
+          console.log(resolved);
+          fs.writeFile("data/commits.json", resolved, "utf8", (err) => {
+            if (err) throw err;
+              commitFeed = require("./data/commits.json");
+              let newData = data.replace(
+                `{{commitFeed}}`,
+                 JSON.stringify(commitFeed, null, 2)
+              );
+              res.write(newData);
+              res.end();
+          })
+        })
+        .catch((rejected) => {
+          throw "rejected";
+        });
+    } else {
     let newData = data.replace(
       `{{commitFeed}}`,
       JSON.stringify(commitFeed, null, 2)
     );
     res.write(newData);
     res.end();
+    }
   });
 });
 
