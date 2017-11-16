@@ -1,7 +1,10 @@
 // APP
 
-let express = require("./lib/express.js");
-let router = require('./lib/router');
+const express = require("./lib/express.js");
+const router = require('./lib/router');
+const http = require('http');
+const gitWrapper = require('./lib/githubAPI_wrapper.js');
+const fs = require('fs');
 
 let app = express();
 let port = 3000;
@@ -14,11 +17,17 @@ app.get('/', (req, res) => {
   res.writeHead(200, {
     'Content-Type':'text/html'
   })
-  res.end('<h1>Hello</h1>');
+
+  fs.readFile('index.html', 'utf8', (err, data) => {
+    if (err) throw err;
+    let index = data;
+    res.end('index');
+  });
+
 });
 
 app.get('/users', (req, res) => {
-  res.end("userTest");
+  res.render("index");
 });
 
 app.post('/', (req, res) => {
