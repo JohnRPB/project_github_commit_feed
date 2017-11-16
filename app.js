@@ -5,7 +5,9 @@ const router = require("./lib/router");
 const http = require("http");
 const gitWrapper = require("./lib/githubAPI_wrapper.js");
 const fs = require("fs");
-let commitFeed = require("./data/commits.json");
+const commitFeed = require("./data/commits.json");
+const querystring = require("querystring");
+const url = require("url");
 
 let app = express();
 let port = 3000;
@@ -14,7 +16,6 @@ let host = "localhost";
 // Use the router to register callbacks
 // for paths and HTTP verbs
 app.get("/", (req, res) => {
-  console.log("inside get");
   res.writeHead(200, {
     "Content-Type": "text/html"
   });
