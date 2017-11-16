@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/JohnRPB/project_github_commit_feed#readme",
   "dependencies": {
+    "dotenv": "^4.0.0",
     "github": "^12.0.2",
     "hbs": "^4.0.1"
   }
